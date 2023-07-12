@@ -13,6 +13,7 @@ variable "cicd_devops_role_name" {
 variable "devops_aws_users" {
   type        = list(string)
   description = "The names of the AWS users that will be used by the DevOps pipeline"
+  default = []
 }
 
 variable "infra_repo" {

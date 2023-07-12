@@ -38,13 +38,16 @@ data "aws_iam_policy_document" "devops_assume" {
     }
   }
 
-  statement {
-    sid     = "AllowDevOpsAndTerraformToAssumeRole"
-    actions = ["sts:AssumeRole"]
+  dynamic "statement"{
+    for_each = var.devops_aws_users
+    content {
+      sid     = "AllowDevOpsAndTerraformToAssumeRole"
+      actions = ["sts:AssumeRole"]
 
-    principals {
-      identifiers = formatlist("arn:${local.partition}:iam::${local.account_id}:user/%s", var.devops_aws_users)
-      type        = "AWS"
+      principals {
+        identifiers = formatlist("arn:${local.partition}:iam::${local.account_id}:user/%s", statement.value)
+        type        = "AWS"
+      }
     }
   }
 
