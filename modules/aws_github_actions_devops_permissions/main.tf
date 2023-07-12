@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "devops_assume" {
     }
   }
 
-  dynamic "statement"{
+  dynamic "statement" {
     for_each = var.devops_aws_users
     content {
       sid     = "AllowDevOpsAndTerraformToAssumeRole"
@@ -48,15 +48,6 @@ data "aws_iam_policy_document" "devops_assume" {
         identifiers = formatlist("arn:${local.partition}:iam::${local.account_id}:user/%s", statement.value)
         type        = "AWS"
       }
-    }
-  }
-
-  statement {
-    sid     = "AllowRoleToAssumeItself"
-    actions = ["sts:AssumeRole"]
-    principals {
-      identifiers = formatlist("arn:${local.partition}:iam::${local.account_id}:role/%s", [var.cicd_devops_role_name])
-      type        = "AWS"
     }
   }
 }
